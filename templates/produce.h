@@ -1,5 +1,4 @@
-#ifndef PRODUCE
-#define PRODUCE
+#pragma once
 
 #include "DoubleLinkedRing.h"
 
@@ -36,5 +35,3 @@ DoubleLinkedRing<Key, Info> produce( const DoubleLinkedRing<Key, Info> &ring1,
 
 	return output;
 }
-
-#endif
