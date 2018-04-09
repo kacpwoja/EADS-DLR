@@ -21,20 +21,20 @@ public:
 	*  Constructors, destructor, copy and assignment  *
 	**************************************************/
 	Iterator(): current( nullptr ) {};
-	Iterator( const Iterator<Key, Info> &source ): current( source.current ) {};
+	Iterator( const Iterator &source ): current( source.current ) {};
 	Iterator( const Node<Key, Info> *source ): current( source ) {};
 	~Iterator() = default;
-	Iterator<Key, Info>& operator=( const Iterator<Key, Info> &rhs );
+	Iterator& operator=( const Iterator &rhs );
 
 	/**************************************************
 	*             Movement Operators                  *
 	**************************************************/
-	Iterator<Key, Info>& operator++() const;
-	Iterator<Key, Info> operator++( int ) const;
-	Iterator<Key, Info>& operator--() const;
-	Iterator<Key, Info> operator--( int ) const;
-	Iterator<Key, Info> operator+( int rhs ) const;
-	Iterator<Key, Info> operator-( int rhs ) const;
+	Iterator& operator++() const;
+	Iterator operator++( int ) const;
+	Iterator& operator--() const;
+	Iterator operator--( int ) const;
+	Iterator operator+( int rhs ) const;
+	Iterator operator-( int rhs ) const;
 
 	/**************************************************
 	*              Access operators                   *
@@ -51,13 +51,13 @@ public:
 	/**************************************************
 	*               Logical operators                 *
 	**************************************************/
-	bool operator==( const Iterator<Key, Info> &rhs ) const { return current == rhs.current; }
-	bool operator!=( const Iterator<Key, Info> &rhs ) const { return current != rhs.current; }
+	bool operator==( const Iterator &rhs ) const { return current == rhs.current; };
+	bool operator!=( const Iterator &rhs ) const { return current != rhs.current; };
 
 };
 
 template <typename Key, typename Info>
-DoubleLinkedRing<Key, Info>::Iterator<Key, Info>& DoubleLinkedRing<Key, Info>::Iterator::operator=( const Iterator<Key, Info>& rhs )
+DoubleLinkedRing<Key, Info>::Iterator& DoubleLinkedRing<Key, Info>::Iterator::operator=( const Iterator<Key, Info>& rhs )
 {
 	current = rhs.current;
 	return *this;
