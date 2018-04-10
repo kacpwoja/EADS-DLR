@@ -10,28 +10,39 @@ DoubleLinkedRing<Key, Info> produce( const DoubleLinkedRing<Key, Info> &ring1,
 									 int num, bool dir )
 {
 	DoubleLinkedRing<Key, Info> output;
-	auto outIte = output.any();
+	if( num < 1 || step1 < 0 || step2 < 0 )
+		return output;
 
-	auto ite1 = ring1.any();
-	auto ite2 = ring2.any();
+	output.push( NULL, NULL );
+	auto outIte = output.begin();
 
-	dir1 ? ite1 + start1 : ite1 - start1;
-	dir2 ? ite2 + start2 : ite2 - start2;
+	auto ite1 = ring1.begin();
+	auto ite2 = ring2.begin();
+
+	ite1 = dir1 ? ite1 + start1 : ite1 - start1;
+	ite2 = dir2 ? ite2 + start2 : ite2 - start2;
 
 	for( ; num > 0; num-- )
 	{
 		for( int i = 0; i < step1; i++ )
 		{
-			dir ? output.insertAfter( *ite1.key, *ite1.info, outIte-- ) : output.insertBefore( *ite1.key, *ite1.info, outIte++ );
+			auto temp = *ite1;
+			dir ? output.insertAfter( temp.key, temp.info, outIte ) : output.insertBefore( temp.key, temp.info, outIte );
+			dir ? outIte++ : outIte--;
 			dir1 ? ite1++ : ite1--;
 		}
 
 		for( int i = 0; i < step2; i++ )
 		{
-			dir ? output.insertAfter( *ite2.key, *ite2.info, outIte-- ) : output.insertBefore( *ite2.key, *ite2.info, outIte++ );
-			dir1 ? ite2++ : ite2--;
+			auto temp = *ite2;
+			dir ? output.insertAfter( temp.key,temp.info, outIte ) : output.insertBefore( temp.key, temp.info, outIte );
+			dir ? outIte++ : outIte--;
+			dir2 ? ite2++ : ite2--;
 		}
 	}
 
+	
+	outIte = output.begin();
+	output.remove( outIte );
 	return output;
 }
