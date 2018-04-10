@@ -13,7 +13,7 @@ DoubleLinkedRing<Key, Info> produce( const DoubleLinkedRing<Key, Info> &ring1,
 	if( num < 1 || step1 < 0 || step2 < 0 )
 		return output;
 
-	output.push( NULL, NULL );
+	output.push( Key(), Info() );
 	auto outIte = output.begin();
 
 	auto ite1 = ring1.begin();

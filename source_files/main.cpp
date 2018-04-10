@@ -44,8 +44,8 @@ int main()
 	
 	cout << "Testing operator == and !=:" << endl;
 	bool is = ring2 == ring3;
-	bool not = ring2 != ring3;
-	cout << "2==3: " << is << " 2!=3: " << not << endl;
+	bool isnot = ring2 != ring3;
+	cout << "2==3: " << is << " 2!=3: " << isnot << endl;
 	
 	cout << "Testing clear: " << endl;
 	ring3.clear();
@@ -64,8 +64,8 @@ int main()
 	DoubleLinkedRing<int, int>::ConstIterator ite3( ite2 );
 
 	is = ite3 == ite2;
-	not = ite3 != ite2;
-	cout << "Ite3 == Ite2: " << is << " Ite3 != Ite2: " << not << endl;
+	isnot = ite3 != ite2;
+	cout << "Ite3 == Ite2: " << is << " Ite3 != Ite2: " << isnot << endl;
 
 	ite1 = ite2;
 

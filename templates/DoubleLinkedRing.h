@@ -461,7 +461,7 @@ void DoubleLinkedRing<Key, Info>::print( std::ostream & os ) const
 	auto current = any;
 	do
 	{
-		os << "Key: " << current->key << " Info: " << current->info << endl;
+		os << "Key: " << current->key << " Info: " << current->info << std::endl;
 		current = current->next;
 	} while( current != any );
 }
