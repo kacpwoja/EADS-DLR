@@ -27,7 +27,117 @@ class DoubleLinkedRing
 	Node<Key, Info> *any;
 	
 public:
-	class Iterator;
+	/******************************
+	*        Iterator Class       *
+	******************************/
+	template <typename IteKey, typename IteInfo>
+	class Iterator
+	{
+		friend class DoubleLinkedRing<IteKey, IteInfo>;
+		Node<IteKey, IteInfo> *current;
+	public:
+		struct Content
+		{
+			IteKey IteKey;
+			IteInfo IteInfo;
+		};
+		/**************************************************
+		*  Constructors, destructor, copy and assignment  *
+		**************************************************/
+		Iterator(): current( nullptr ) {};
+		Iterator( const Iterator &source ): current( source.current ) {};
+		Iterator( const Node<IteKey, IteInfo> *source ): current( source ) {};
+		~Iterator() = default;
+		Iterator<IteKey, IteInfo>& operator=( const Iterator<IteKey, IteInfo> &rhs )
+		{
+			current = rhs.current;
+			return *this;
+		};
+
+		/**************************************************
+		*             Movement Operators                  *
+		**************************************************/
+		Iterator& operator++() const
+		{
+			current = current->next;
+			return *this;
+		};
+
+		Iterator operator++( int ) const
+		{
+			Iterator<IteKey, IteInfo> temp( *this );
+			current = current->next;
+			return temp;
+		};
+
+		Iterator& operator--() const
+		{
+			current = current->previous;
+			return *this;
+		};
+
+		Iterator operator--( int ) const
+		{
+			Iterator<IteKey, IteInfo> temp;
+			current = current->previous;
+			return tmep;
+		};
+
+		Iterator operator+( int rhs ) const
+		{
+			Iterator<IteKey, IteInfo> temp( *this );
+			for( int i = 0; i < rhs; i++ )
+				temp.current = temp.current->next;
+			return temp;
+		};
+
+		Iterator operator-( int rhs ) const
+		{
+			Iterator<IteKey, IteInfo> temp( *this );
+			for( int i = 0; i < rhs; i++ )
+				temp.current = temp.current->previous;
+			return temp;
+		};
+
+		/**************************************************
+		*              Access operators                   *
+		**************************************************/
+		IteInfo& getIteInfo() {	return current->info; };
+		const IteInfo& getIteInfo() const { return current->info; };
+		IteKey& getIteKey() { return current->key; };
+		const IteKey& getIteKey() const { return current->key; };
+
+		Content operator*()
+		{
+			Content output{ current->key, current->info };
+			return output;
+		};
+
+		const Content operator*() const
+		{
+			Content output{ current->key, current->info };
+			return output;
+		};
+
+		Content* operator->()
+		{
+			std::unique_ptr<Content> output( new Content{ current->key, current->info } );
+			return output.get();
+		};
+
+		const Content* operator->() const
+		{
+			std::unique_ptr<Content> output( new Content{ current->key, current->info } );
+			return &output;
+		};;
+
+		/**************************************************
+		*               Logical operators                 *
+		**************************************************/
+		bool operator==( const Iterator &rhs ) const { return current == rhs.current; };
+		bool operator!=( const Iterator &rhs ) const { return current != rhs.current; };
+
+	};
 	typedef const Iterator ConstIterator;
 	
 	/**************************************************
@@ -135,7 +245,7 @@ public:
 	//Returns:		void
 	void print( std::ostream &os = std::cout ) const;
 
-	friend std::ostream& operator<<( std::ostream &os, const DoubleLinkedRing<Key, Info> &ring );
+	friend std::ostream& operator<<( std::ostream &os, const DoubleLinkedRing<Key, Info> &ring ) { ring.print( os ); return os; };
 	
 };
 
@@ -227,10 +337,10 @@ bool DoubleLinkedRing<Key, Info>::operator==( DoubleLinkedRing<Key, Info>& rhs )
 }
 
 template<typename Key, typename Info>
-DoubleLinkedRing<Key,Info>::Iterator DoubleLinkedRing<Key, Info>::find( const Key & key, int occurence ) const
+typename DoubleLinkedRing<Key,Info>::Iterator<Key, Info> DoubleLinkedRing<Key, Info>::find( const Key & key, int occurence ) const
 {
 	if( any == nullptr )
-		return Iterator();
+		return Iterator<Key, Info>();
 
 	int o = 0;
 	auto current = any;
@@ -241,7 +351,7 @@ DoubleLinkedRing<Key,Info>::Iterator DoubleLinkedRing<Key, Info>::find( const Ke
 		current = current->next;
 	} while( current != any );
 
-	return Iterator();
+	return Iterator<Key, Info>();
 }
 
 template<typename Key, typename Info>
@@ -316,4 +426,20 @@ void DoubleLinkedRing<Key, Info>::remove( const Iterator & location )
 template<typename Key, typename Info>
 void DoubleLinkedRing<Key, Info>::remove( const Key & location, int occurence )
 {
+	auto iter = find( location, occurence );
+	remove( iter );
+}
+
+template<typename Key, typename Info>
+void DoubleLinkedRing<Key, Info>::print( std::ostream & os ) const
+{
+	if( isEmpty() )
+		return;
+
+	auto current = any;
+	do
+	{
+		os << "Key: " << current->key << "Info: " << current->info << endl;
+		current = current->next;
+	} while( current != any );
 }
